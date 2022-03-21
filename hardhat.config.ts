@@ -1,29 +1,35 @@
 /**
  * @package solidity-hardhat-template
- * @filename hardhat.config.ts
  * @file hardhat configuration
- * @version 1.2.0
+ * @version 1.1.0
+ * @type import('hardhat/config').HardhatUserConfig
  */
-
+import { ethers } from "ethers";
+import 'xdeployer';
 import '@nomiclabs/hardhat-etherscan';
 import '@typechain/hardhat';
 import '@nomiclabs/hardhat-ethers';
 import '@typechain/hardhat';
-import 'dotenv/config';
+//import 'dotenv/config';
+import dotenv from 'dotenv'
+
 import { HardhatUserConfig } from 'hardhat/types';
 
-const test_mnemonic = 'test test test test test test test test test test test junk';
+dotenv.config()
 
-/** @type import('hardhat/config').HardhatUserConfig */
+
+const test_mnemonic =
+  'test test test test test test test test test test test junk';
+
 const config: HardhatUserConfig = {
-/**
-* @note
-* Before version 0.8.6 omitting the 'enabled' key was not equivalent to setting
-* it to false and would actually disable all the optimizations.
-* @see: {@link https://docs.soliditylang.org/en/latest/using-the-compiler.html#compiler-input-and-output-json-description}
-*
-*/
-solidity: {
+  /**
+   * @note
+   * Before version 0.8.6 omitting the 'enabled' key was not equivalent to setting
+   * it to false and would actually disable all the optimizations.
+   * @see: {@link https://docs.soliditylang.org/en/latest/using-the-compiler.html#compiler-input-and-output-json-description}
+   *
+   */
+  solidity: {
     version: '0.8.10',
     settings: {
       metadata: {
@@ -54,18 +60,23 @@ solidity: {
     hardhat: {
       allowUnlimitedContractSize: false,
     },
-    mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    },
     goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.GOERLI_RPC}`,
+      url: 'https://eth-goerli.alchemyapi.io/v2/cFP5cs1HrnoWVda-8qLPi8HBOpLuxDG7',
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      goerli: process.env.ETHERSCAN_API_KEY
+    }
+  },
+  xdeploy: {
+    contract: 'DSAllowances',
+    //    constructorArgsPath: "PATH_TO_CONSTRUCTOR_ARGS", // optional
+    salt: '420691337',
+    signer: process.env.PRIVATE_KEY,
+    networks: ['goerli'],
+    rpcUrls: ["https://eth-goerli.alchemyapi.io/v2/cFP5cs1HrnoWVda-8qLPi8HBOpLuxDG7"],
+    gasLimit: 1.2 * 10 ** 6,
   },
   paths: {
     sources: './contracts',
@@ -79,7 +90,7 @@ solidity: {
   },
 };
 
-/** @note Compiler output configuration for verifying on Sourceify */
+// @note Compiler output configuration for verifying on Sourceify
 export const defaultSolcOutputSelection = {
   '*': {
     '*': [

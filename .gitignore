@@ -1,3 +1,7 @@
+.env
+.env.production
+!tessting.env
+!.env.testing
 __pycache__
 .history
 .hypothesis/
